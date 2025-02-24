@@ -3,14 +3,13 @@ import { v2 as cloudinary } from 'cloudinary';
 import { Purchase } from "../models/purchase.model.js";
 import Stripe from "stripe";
 import config from "../config.js";
+import fs from 'fs';
 const stripe = new Stripe(config.STRIPE_SECRET_KEY);
 
 export const createCourse = async (req, res) => {
     const adminId = req.adminId;
     const { title, description, price } = req.body;
     const { image, video } = req.files;
-    console.log(req.files);
-    console.log(req.body);
     if (!video || !image) {
         return res.json({ error: "video required" });
     }
@@ -35,15 +34,52 @@ export const createCourse = async (req, res) => {
         if (!allowedVideoFormats.includes(video.mimetype)) {
             return res.status(400).json({ error: "Invalid video format (only MP4, MKV, AVI, MOV allowed)" });
         }
-        console.log("Uploading video from:", video.tempFilePath);
-        const cloud_response_content = await cloudinary.uploader.upload_large(video.tempFilePath, {
-            resource_type: "video",
-            timeout: 60000,
-            chunk_size: 6000000
-        })
-        if (!cloud_response_content || cloud_response_content.error) {
-            return res.status(400).json({ error: "Error while video uploading in cloudinary" })
+        // const path = video.tempFilePath.replace(/\\/g, "/"); // Fix Windows path issue
+
+        // if (!fs.existsSync(path)) {
+        //     return res.status(400).json({ error: "Temporary video file not found" });
+        // }
+
+        // console.log("Uploading video from:", path);
+        // const cloud_response_content = await cloudinary.uploader.upload_large(path, {
+        //     resource_type: "video",
+        //     timeout: 60000,
+        //     chunk_size: 6000000
+        // })
+        // console.log(cloud_response_content);
+        // console.log("id"+cloud_response_content.public_id);
+        // console.log("id"+cloud_response_content.secure_url);
+        // if (!cloud_response_content || cloud_response_content.error) {
+        //     return res.status(400).json({ error: "Error while video uploading in cloudinary" })
+        // }
+        // if (!cloud_response_content.public_id || !cloud_response_content.secure_url) {
+        //     return res.status(400).json({ error: "Video upload failed. Missing public_id or url." });
+        // }
+
+        console.log("📤 Uploading video to Cloudinary...");
+        if (!fs.existsSync(video.tempFilePath)) {
+            console.error("❌ Video file does not exist:", video.tempFilePath);
+            return res.status(400).json({ error: "Temporary video file not found" });
         }
+
+        const cloud_response_content = await cloudinary.uploader.upload(video.tempFilePath, {
+            resource_type: "video",
+            public_id: `course_video_${Date.now()}`,
+            timeout: 120000, // Increase timeout
+            chunk_size: 6000000
+        });
+
+        console.log("🎥 Cloudinary Video Response:", JSON.stringify(cloud_response_content, null, 2));
+
+        if (!cloud_response_content || cloud_response_content.error) {
+            console.error("❌ Cloudinary Video Upload Error:", cloud_response_content.error);
+            return res.status(400).json({ error: "Error while uploading video to Cloudinary" });
+        }
+        if (!cloud_response_content.public_id || !cloud_response_content.secure_url) {
+            console.error("❌ Video upload failed. Missing public_id or secure_url.");
+            return res.status(400).json({ error: "Video upload failed. Missing public_id or url." });
+        }
+
         const courseData = {
             title,
             description,
@@ -52,10 +88,10 @@ export const createCourse = async (req, res) => {
                 public_id: cloud_response.public_id,
                 url: cloud_response.secure_url
             },
-            video: {
+            video: [{
                 public_id: cloud_response_content.public_id,
                 url: cloud_response_content.secure_url
-            },
+            }],
             creatorId: adminId
         }
         const data = await Course.create(courseData);
@@ -72,7 +108,7 @@ export const createCourse = async (req, res) => {
 export const updateCourse = async (req, res) => {
     const adminId = req.adminId;
     const { courseId } = req.params;
-    const { title, description, price, image } = req.body;
+    const { title, description, price } = req.body;
     try {
         const courseSerch = await Course.findById(courseId);
         if (!courseSerch) {
@@ -84,11 +120,7 @@ export const updateCourse = async (req, res) => {
         }, {
             title,
             description,
-            price,
-            image: {
-                public_id: image?.public_id,
-                url: image?.url
-            }
+            price
         });
         res.status(201).json({ message: "course updated successfully", course });
     } catch (error) {

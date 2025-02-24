@@ -5,6 +5,7 @@ import courseRouter from "./routes/course.route.js";
 import userRouter from "./routes/user.route.js"
 import adminRouter from "./routes/admin.route.js"
 import orderRoute from "./routes/order.route.js"
+import testRouter from "./routes/test.route.js"
 import fileUpload from "express-fileupload";
 import { v2 as cloudinary } from 'cloudinary';
 import cookieParser from "cookie-parser";
@@ -65,6 +66,7 @@ app.use('/api/v1/course', courseRouter);
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/admin', adminRouter);
 app.use("/api/v1/order", orderRoute);
+app.use("/api/v1/test", testRouter);
 
 app.listen(port, () => {
     console.log("server is listing on " + port)

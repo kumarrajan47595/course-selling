@@ -5,6 +5,12 @@ import jwt from "jsonwebtoken";
 import config from "../config.js";
 import { Purchase } from "../models/purchase.model.js";
 import { Course } from "../models/course.model.js";
+import mongoose from "mongoose";
+import fs from "fs";
+import path from "path";
+import PDFDocument from "pdfkit";
+import { fileURLToPath } from "url";
+
 
 export const signup = async (req, res) => {
     const userSchema = z.object({
@@ -178,3 +184,62 @@ export const updateProfile = async (req, res) => {
     }
 
 }
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+export const generateCertificate = async (req, res) => {
+    try {
+        const userId = req.userId;
+
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ error: "Invalid user ID format" });
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const purchase = await Purchase.findOne({ userId });
+        if (!purchase) {
+            return res.status(404).json({ message: "No purchased course found" });
+        }
+
+        const course = await Course.findById(purchase.courseId);
+        if (!course) {
+            return res.status(400).json({ message: "Course not found" });
+        }
+
+        const certificatesDir = path.join(__dirname, "..", "certificates");
+        if (!fs.existsSync(certificatesDir)) {
+            fs.mkdirSync(certificatesDir, { recursive: true });
+        }
+
+        const filePath = path.join(certificatesDir, `${user.firstName}_${course.title}.pdf`);
+        const writeStream = fs.createWriteStream(filePath);
+
+        const doc = new PDFDocument({ size: "A4" });
+        doc.pipe(writeStream);
+
+        doc.fontSize(25).text("Certificate of Completion", { align: "center" });
+        doc.moveDown();
+        doc.fontSize(20).text(`This certifies that`, { align: "center" });
+        doc.moveDown();
+        doc.fontSize(30).text(user.firstName, { align: "center", underline: true });
+        doc.moveDown();
+        doc.fontSize(20).text(`has successfully completed the course`, { align: "center" });
+        doc.moveDown();
+        doc.fontSize(25).text(course.title, { align: "center", bold: true });
+        doc.moveDown();
+        doc.fontSize(15).text(`Date: ${new Date().toDateString()}`, { align: "center" });
+
+        doc.end();
+
+        writeStream.on("finish", () => {
+            res.download(filePath, `${course.title}_Certificate.pdf`);
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error generating certificate" });
+    }
+};

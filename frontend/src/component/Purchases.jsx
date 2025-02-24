@@ -93,8 +93,18 @@ function Purchases() {
                             </Link>
                         </li>
                         <li className="mb-4">
+                            <Link to="/assessment" className="flex items-center">
+                                <FaDiscourse className="mr-2" /> Assessment
+                            </Link>
+                        </li>
+                        <li className="mb-4">
                             <a href="#" className="flex items-center text-blue-500">
                                 <FaDownload className="mr-2" /> Purchases
+                            </a>
+                        </li>
+                        <li className="mb-4">
+                            <a href="/certificate" className="flex items-center">
+                                <FaDownload className="mr-2" /> Certificate
                             </a>
                         </li>
                         <li className="mb-4">
@@ -168,7 +178,7 @@ function Purchases() {
                                                 : purchase.description}
                                         </p>
                                         <span className="text-green-700 font-semibold text-sm">
-                                            ${purchase.price} only
+                                            {purchase.price} only
                                         </span>
                                     </div>
                                 </div>

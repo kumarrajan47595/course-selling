@@ -172,14 +172,16 @@ export const updateProfile = async (req, res) => {
     const adminId = req.adminId;
     const { firstName, lastName, email } = req.body;
     try {
-        const user = await Admin.findById(usersId);
+        const user = await Admin.findById(adminId);
         if (!user) {
             return res.status(403).json({ Message: "user not found" });
         }
-        const updateUser = await Admin.findByIdAndUpdate({ usersId }, {
+        const updateUser = await Admin.findByIdAndUpdate(adminId, {
             firstName: firstName,
             lastName: lastName,
             email: email
+        }, {
+            new: true, runValidators: true
         })
         res.status(200).json({ message: "profile updated", updateUser });
     } catch (error) {
@@ -189,37 +191,37 @@ export const updateProfile = async (req, res) => {
 
 }
 
-export const studentaccount=async(req,res)=>{
-    const {userId}=req.params;
-    const student=await User.findById(userId);
+export const studentaccount = async (req, res) => {
+    const { userId } = req.params;
+    const student = await User.findById(userId);
     try {
-    if (!student) {
-        return res.status(404).json({Message:"Student not found"});
-    }
-    const course=await Course.findById(userId);
-    res.status(200).json({Message:"Student detalis",student,course});
+        if (!student) {
+            return res.status(404).json({ Message: "Student not found" });
+        }
+        const course = await Course.findById(userId);
+        res.status(200).json({ Message: "Student detalis", student, course });
     } catch (error) {
         console.log(error);
-        res.status(403).json({error:"Error in get Student account"})
-    }
-}
-
-export const ActiveStudent=async(req,res)=>{
-    try {
-        const user=await User.find({status:"active"});
-        res.status(200).json({Message:"User Details",user});
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({message:"Error in fetching user"});
+        res.status(403).json({ error: "Error in get Student account" })
     }
 }
 
-export const BlockStudent=async(req,res)=>{
+export const ActiveStudent = async (req, res) => {
     try {
-        const user=await User.find({status:"blocked"});
-        res.status(200).json({Message:"User Details",user});
+        const user = await User.find({ status: "active" });
+        res.status(200).json({ Message: "User Details", user });
     } catch (error) {
         console.log(error);
-        res.status(400).json({message:"Error in fetching user"});
+        res.status(400).json({ message: "Error in fetching user" });
+    }
+}
+
+export const BlockStudent = async (req, res) => {
+    try {
+        const user = await User.find({ status: "blocked" });
+        res.status(200).json({ Message: "User Details", user });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ message: "Error in fetching user" });
     }
 }

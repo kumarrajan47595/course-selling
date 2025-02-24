@@ -9,6 +9,10 @@ const purchaseSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "Course",
     },
+    completed: {
+        type: String,
+        enum: ["uncompleted", "completed"], default: "uncompleted"
+    }
 })
 
-export const Purchase=mongoose.model("Purchase",purchaseSchema);
+export const Purchase = mongoose.model("Purchase", purchaseSchema);

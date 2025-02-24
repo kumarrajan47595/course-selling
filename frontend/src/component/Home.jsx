@@ -107,12 +107,20 @@ function Home() {
                     </div>
                     <div className="space-x-4">
                         {isLoggedIn ? (
-                            <button
-                                onClick={handleLogout}
-                                className="bg-transparent text-white text-xs md:text-lg md:py-2 md:px-4 p-2 border border-white rounded"
-                            >
-                                Signout
-                            </button>
+                            <>
+                                <button
+                                    onClick={handleLogout}
+                                    className="bg-transparent text-white text-xs md:text-lg md:py-2 md:px-4 p-2 border border-white rounded"
+                                >
+                                    Signout
+                                </button>
+                                <Link
+                                    to={"/change-password"}
+                                    className="bg-transparent text-white text-xs md:text-lg md:py-2 md:px-4 p-2 border border-white rounded"
+                                >
+                                    Change Password
+                                </Link>
+                            </>
                         ) : (
                             <>
                                 <Link

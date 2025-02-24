@@ -9,8 +9,6 @@ function UpdateCourse() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState("");
-    const [image, setImage] = useState("");
-    const [imagePreview, setImagePreview] = useState("");
     const [loading, setLoading] = useState(true);
 
     const navigate = useNavigate();
@@ -24,8 +22,6 @@ function UpdateCourse() {
                 setTitle(data.course.title);
                 setDescription(data.course.description);
                 setPrice(data.course.price);
-                setImage(data.course.image.url);
-                setImagePreview(data.course.image.url);
                 setLoading(false);
             } catch (error) {
                 console.log(error);
@@ -36,24 +32,24 @@ function UpdateCourse() {
         fetchCourseData();
     }, [id]);
 
-    const changePhotoHandler = (e) => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-            setImagePreview(reader.result);
-            setImage(file);
-        };
-    };
+    // const changePhotoHandler = (e) => {
+    //     const file = e.target.files[0];
+    //     const reader = new FileReader();
+    //     reader.readAsDataURL(file);
+    //     reader.onload = () => {
+    //         setImagePreview(reader.result);
+    //         setImage(file);
+    //     };
+    // };
     const handleUpdateCourse = async (e) => {
         e.preventDefault();
         const formData = new FormData();
         formData.append("title", title);
         formData.append("description", description);
         formData.append("price", price);
-        if (image) {
-            formData.append("imageUrl", image);
-        }
+        // if (image) {
+        //     formData.append("imageUrl", image);
+        // }
         const admin = JSON.parse(localStorage.getItem("admin"));
         const token = admin.token;
         if (!token) {
@@ -122,7 +118,7 @@ function UpdateCourse() {
                             />
                         </div>
 
-                        <div className="space-y-2">
+                        {/* <div className="space-y-2">
                             <label className="block text-lg">Course Image</label>
                             <div className="flex items-center justify-center">
                                 <img
@@ -136,7 +132,7 @@ function UpdateCourse() {
                                 onChange={changePhotoHandler}
                                 className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none"
                             />
-                        </div>
+                        </div> */}
 
                         <button
                             type="submit"

@@ -79,9 +79,8 @@ function Courses() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-screen bg-gray-100 w-64 p-5 transform z-10 transition-transform duration-300 ease-in-out ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 md:static`}
+        className={`fixed top-0 left-0 h-screen bg-gray-100 w-64 p-5 transform z-10 transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } md:translate-x-0 md:static`}
       >
         <div className="flex items-center mb-10 mt-10 md:mt-0">
           <img src={logo} alt="Profile" className="rounded-full h-12 w-12" />
@@ -99,19 +98,29 @@ function Courses() {
               </a>
             </li>
             <li className="mb-4">
+              <a href="/assessment" className="flex items-center">
+                <FaDiscourse className="mr-2" /> Assessment
+              </a>
+            </li>
+            <li className="mb-4">
               <a href="/purchases" className="flex items-center">
                 <FaDownload className="mr-2" /> Purchases
               </a>
             </li>
             <li className="mb-4">
-              <a href="#" className="flex items-center">
-                <IoMdSettings className="mr-2" /> Settings
+              <a href="/certificate" className="flex items-center">
+                <FaDownload className="mr-2" /> Certificate
+              </a>
+            </li>
+            <li className="mb-4">
+              <a href="profile" className="flex items-center">
+                <IoMdSettings className="mr-2" /> Profile
               </a>
             </li>
             <li>
               {isLoggedIn ? (
                 <Link to={"/"}
-                  
+
                   className="flex items-center"
                   onClick={handleLogout}
                 >

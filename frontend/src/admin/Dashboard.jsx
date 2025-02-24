@@ -35,7 +35,11 @@ function Dashboard() {
               Create Course
             </button>
           </Link>
-
+          <Link to="/admin/create-assessment">
+            <button className="w-full bg-orange-500 hover:bg-blue-600 text-white py-2 rounded">
+              Create Assessnebt
+            </button>
+          </Link>
           <Link to="/">
             <button className="w-full bg-red-500 hover:bg-blue-600 text-white py-2 rounded">
               Home
@@ -49,6 +53,16 @@ function Dashboard() {
           <Link to="/admin/unblock">
             <button className="w-full bg-yellow-500 hover:bg-blue-600 text-white py-2 rounded">
               UnBLock
+            </button>
+          </Link>
+          <Link to={"/admin/profile"}>
+          <button className="w-full bg-yellow-500 hover:bg-blue-600 text-white py-2 rounded">
+              Profile
+            </button>
+          </Link>
+          <Link to={"/admin/change-password"}>
+          <button className="w-full bg-yellow-500 hover:bg-blue-600 text-white py-2 rounded">
+              Change Password
             </button>
           </Link>
           <Link to="/admin/signin">

@@ -113,7 +113,6 @@ function Buy() {
                 amount: paymentIntent.amount,
                 status: paymentIntent.status,
             };
-            console.log("Payment info: ", paymentInfo);
             await axios
                 .post("http://localhost:400/api/v1/order", paymentInfo, {
                     headers: {
