@@ -6,13 +6,12 @@ import userRouter from "./routes/user.route.js"
 import adminRouter from "./routes/admin.route.js"
 import orderRoute from "./routes/order.route.js"
 import testRouter from "./routes/test.route.js"
+import feedbackRoute from "./routes/feedback.route.js"
 import fileUpload from "express-fileupload";
 import { v2 as cloudinary } from 'cloudinary';
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import fs from 'fs';
-
-
 
 const router = express.Router();
 const app = express();
@@ -67,6 +66,7 @@ app.use('/api/v1/user', userRouter);
 app.use('/api/v1/admin', adminRouter);
 app.use("/api/v1/order", orderRoute);
 app.use("/api/v1/test", testRouter);
+app.use('/api/v1/feedback',feedbackRoute);
 
 app.listen(port, () => {
     console.log("server is listing on " + port)

@@ -35,26 +35,40 @@ function OurCourses() {
 
   // delete courses code
   const handleDelete = async (id) => {
-    try {
+    const confirm = window.confirm("Are sure you want to Delete Course?");
+    if (confirm) {
+      // alert("Delete Confirmed");
+      try {
         console.log(id);
-      const response = await axios.delete(
-        `http://localhost:400/api/v1/course/delete/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        }
-      );
-      toast.success(response.data.message);
-      const updatedCourses = courses.filter((course) => course._id !== id);
-      console.log(response.data)
-      setCourses(updatedCourses);
-    } catch (error) {
-      console.log("Error in deleting course ", error);
-      toast.error(error.response.data.errors || "Error in deleting course");
+        const response = await axios.delete(
+          `http://localhost:400/api/v1/course/delete/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
+        );
+        toast.success(response.data.message);
+        const updatedCourses = courses.filter((course) => course._id !== id);
+        console.log(response.data)
+        setCourses(updatedCourses);
+      } catch (error) {
+        console.log("Error in deleting course ", error);
+        toast.error(error.response.data.errors || "Error in deleting course");
+      }
+    } else {
+      alert("Delete Canceled");
     }
   };
+
+  const handleAdd = (courseId) => {
+    navigate(`/admin/add-video/${courseId}`)
+  }
+
+  const handleFeedback = (courseId) => {
+    navigate(`/get-feedback/${courseId}`)
+  }
 
   if (loading) {
     return <p className="text-center text-gray-500">Loading...</p>;
@@ -105,6 +119,18 @@ function OurCourses() {
               >
                 Update
               </Link>
+              <button
+                onClick={() => handleAdd(course._id)}
+                className="bg-orange-500 text-white py-2 px-4 mt-4 rounded hover:bg-blue-600"
+              >
+                Add video
+              </button>
+              <button
+                onClick={() => handleFeedback(course._id)}
+                className="bg-orange-500 text-white py-2 px-4 mt-4 rounded hover:bg-blue-600"
+              >
+                Review
+              </button>
               <button
                 onClick={() => handleDelete(course._id)}
                 className="bg-red-500 text-white py-2 px-4 mt-4 rounded hover:bg-red-600"

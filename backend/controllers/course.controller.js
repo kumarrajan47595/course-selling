@@ -10,6 +10,7 @@ export const createCourse = async (req, res) => {
     const adminId = req.adminId;
     const { title, description, price } = req.body;
     const { image, video } = req.files;
+    const documents = req.files?.documents;
     if (!video || !image) {
         return res.json({ error: "video required" });
     }
@@ -79,6 +80,33 @@ export const createCourse = async (req, res) => {
             console.error("❌ Video upload failed. Missing public_id or secure_url.");
             return res.status(400).json({ error: "Video upload failed. Missing public_id or url." });
         }
+        //document upload
+        const allowedDocumentFormats = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+        let uploadedDocuments = [];
+        if (documents) {
+            const filesArray = Array.isArray(documents) ? documents : [documents];
+            for (let doc of filesArray) {
+                if (!allowedDocumentFormats.includes(doc.mimetype)) {
+                    return res.status(400).json({ error: "Invalid document format. Only PDF, DOC, and DOCX allowed." });
+                }
+
+                // Upload document as a "raw" resource
+                const cloud_doc_response = await cloudinary.uploader.upload(doc.tempFilePath, {
+                    resource_type: "raw",
+                    public_id: `course_doc_${Date.now()}`
+                });
+
+                if (!cloud_doc_response || cloud_doc_response.error) {
+                    return res.status(400).json({ error: "Error uploading document to Cloudinary" });
+                }
+
+                uploadedDocuments.push({
+                    public_id: cloud_doc_response.public_id,
+                    url: cloud_doc_response.secure_url,
+                    format: doc.mimetype.split("/")[1] // Extract format (pdf, doc, docx)
+                });
+            }
+        }
 
         const courseData = {
             title,
@@ -92,6 +120,7 @@ export const createCourse = async (req, res) => {
                 public_id: cloud_response_content.public_id,
                 url: cloud_response_content.secure_url
             }],
+            documents: uploadedDocuments,
             creatorId: adminId
         }
         const data = await Course.create(courseData);

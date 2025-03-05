@@ -18,7 +18,6 @@ function Purchases() {
     const user = JSON.parse(localStorage.getItem("user"));
     const token = user?.token; // using optional chaining to avoid app crashing
 
-    console.log("purchases: ", purchases);
 
     // Token handling
     useEffect(() => {
@@ -44,6 +43,7 @@ function Purchases() {
                     },
                     withCredentials: true,
                 });
+                console.log(response.data.courseData)
                 setPurchase(response.data.courseData);
             } catch (error) {
                 setErrorMessage("Failed to fetch purchase data");
@@ -72,6 +72,14 @@ function Purchases() {
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
+
+    const hadleClickBtn = (courseId) => {
+        navigate(`/video/${courseId}`);
+    }
+
+    const hadleFeedback=(courseId)=>{
+        navigate(`/add-feedback/${courseId}`)
+    }
 
     return (
         <div className="flex h-screen">
@@ -179,7 +187,10 @@ function Purchases() {
                                         </p>
                                         <span className="text-green-700 font-semibold text-sm">
                                             {purchase.price} only
-                                        </span>
+                                        </span><br />
+                                        <button className="bg-orange-500 text-white py-2 px-4 mt-4 rounded hover:bg-blue-600" onClick={() => hadleClickBtn(purchase._id)}>Details</button>
+                                        <br />
+                                        <button className="bg-orange-500 text-white py-2 px-4 mt-4 rounded hover:bg-blue-600" onClick={() => hadleFeedback(purchase._id)}>Add Feedback</button>
                                     </div>
                                 </div>
                             </div>

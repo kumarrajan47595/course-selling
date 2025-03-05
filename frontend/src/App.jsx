@@ -27,6 +27,10 @@ import EditProfileAdmin from './admin/EditProfileAdmin'
 import Certificate from './component/Certificate'
 import Assessement from './component/Assessement'
 import AssessmentCreation from './admin/AssessmentCreation'
+import Video from './component/Video'
+import AddVideo from './admin/AddVideo'
+import AddFeedback from './component/AddFeedback'
+import SeeFeedback from './component/SeeFeedback'
 
 
 function App() {
@@ -48,11 +52,15 @@ function App() {
         <Route path='/buy/:courseId' element={<Buy />}></Route>
         <Route path='/purchases' element={user ? <Purchases /> : <Navigate to={'/signin'} />}></Route>
         <Route path='/certificate' element={user ? <Certificate/> : <Navigate to={'/signin'} />}></Route>
+        <Route path='/video/:courseId' element={user ? <Video/> : <Navigate to={'/signin'} />}></Route>
+        <Route path='/add-feedback/:courseId' element={<AddFeedback/>}></Route>
+        <Route path='/get-feedback/:courseId' element={<SeeFeedback/>}></Route>
         {/* Admin Routes */}
         <Route path='/admin/signup' element={<AdminSignup />}></Route>
         <Route path='/admin/signin' element={<AdminSignin />}></Route>
         <Route path='/admin/change-password' element={<ChangePasswordAdmin />}></Route>
         <Route path='/admin/create-course' element={<CourseCreate />}></Route>
+        <Route path='/admin/add-video/:courseId' element={<AddVideo />}></Route>
         <Route path='/admin/create-assessment' element={<AssessmentCreation/>}></Route>
         <Route path='/admin/dashboard' element={admin ? <Dashboard /> : <Navigate to={'/admin/signin'} />}></Route>
         <Route path='/admin/our-courses' element={<OurCourses />}></Route>

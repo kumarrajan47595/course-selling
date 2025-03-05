@@ -32,15 +32,37 @@ const courseSchema = new mongoose.Schema({
             type: String,
             required: true
         },
-        title:{
-            type:String,
+        title: {
+            type: String,
         },
-        description:{
-            type:String,
+        description: {
+            type: String,
         },
-        createdAt:{
-            type:Date,
-            default:Date.now
+        createdAt: {
+            type: Date,
+            default: Date.now
+        }
+    }],
+    documents: [{
+        public_id: {
+            type: String,
+            required: true
+        },
+        url: {
+            type: String,
+            required: true
+        },
+        title: {
+            type: String
+        },
+        format: {
+            type: String,
+            enum: ["pdf", "doc", "docx"],  // Restricting formats to only PDF and Word files
+            required: true
+        },
+        uploadedAt: {
+            type: Date,
+            default: Date.now
         }
     }],
     creatorId: {

@@ -1,44 +1,31 @@
 import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-function CourseCreate() {
+import { useNavigate, useParams } from "react-router-dom";
+function AddVideo() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [price, setPrice] = useState("");
-    const [image, setImage] = useState("");
-    const [imagePreview, setImagePreview] = useState("");
-    const [video, setVideo] = useState("");
     const [documents, setDocuments] = useState("");
-
+    const [video, setVideo] = useState("");
+    const { courseId } = useParams();
 
     const navigate = useNavigate();
 
-    const changePhotoHandler = (e) => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-            setImagePreview(reader.result);
-            setImage(file);
-        };
-    };
+
     const changeVideoHandler = (e) => {
         const file = e.target.files[0];
         setVideo(file);
     };
-    const changeDocumentsHandler = (e) => {
+    const changeAssessmentHandler = (e) => {
         const file = e.target.files[0];
         setDocuments(file);
-    }
+    };
 
-    const handleCreateCourse = async (e) => {
+    const handleAddVideo = async (e) => {
         e.preventDefault();
         const formData = new FormData();
         formData.append("title", title);
         formData.append("description", description);
-        formData.append("price", price);
-        formData.append("image", image);
         formData.append("video", video);
         formData.append("documents", documents);
 
@@ -51,7 +38,7 @@ function CourseCreate() {
 
         try {
             const response = await axios.post(
-                "http://localhost:400/api/v1/course/create",
+                `http://localhost:400/api/v1/course/addvideo/${courseId}`,
                 formData,
                 {
                     headers: {
@@ -62,13 +49,11 @@ function CourseCreate() {
                 }
             );
             console.log(response.data);
-            toast.success(response.data.message || "Course created successfully");
+            toast.success(response.data.message || "video added successfully");
             navigate("/admin/our-courses");
             setTitle("");
-            setPrice("");
             setImage("");
             setDescription("");
-            setImagePreview("");
             setVideo("");
             setDocuments("");
         } catch (error) {
@@ -81,9 +66,9 @@ function CourseCreate() {
         <div>
             <div className="min-h-screen  py-10">
                 <div className="max-w-4xl mx-auto p-6 border  rounded-lg shadow-lg">
-                    <h3 className="text-2xl font-semibold mb-8">Create Course</h3>
+                    <h3 className="text-2xl font-semibold mb-8">Add video</h3>
 
-                    <form onSubmit={handleCreateCourse} encType="multipart/form-data" className="space-y-6">
+                    <form onSubmit={handleAddVideo} encType="multipart/form-data" className="space-y-6">
                         <div className="space-y-2">
                             <label className="block text-lg">Title</label>
                             <input
@@ -105,34 +90,6 @@ function CourseCreate() {
                                 className="w-full px-3 py-2 border border-gray-400   rounded-md outline-none"
                             />
                         </div>
-
-                        <div className="space-y-2">
-                            <label className="block text-lg">Price</label>
-                            <input
-                                type="number"
-                                placeholder="Enter your course price"
-                                value={price}
-                                onChange={(e) => setPrice(e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-400   rounded-md outline-none"
-                            />
-                        </div>
-
-                        <div className="space-y-2">
-                            <label className="block text-lg">Course Image</label>
-                            <div className="flex items-center justify-center">
-                                <img
-                                    src={imagePreview ? `${imagePreview}` : "/imgPL.webp"}
-                                    alt="Image"
-                                    className="w-full max-w-sm h-auto rounded-md object-cover"
-                                />
-                            </div>
-                            <input
-                                type="file"
-                                onChange={changePhotoHandler}
-                                className="w-full px-3 py-2 border border-gray-400   rounded-md outline-none"
-                            />
-                        </div>
-
                         <div className="space-y-2">
                             <label className="block text-lg">Course Video</label>
                             <input
@@ -142,13 +99,12 @@ function CourseCreate() {
                                 className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none"
                             />
                         </div>
-
                         <div className="space-y-2">
                             <label className="block text-lg">Course Assessment</label>
                             <input
                                 type="file"
                                 accept="pdf/*"
-                                onChange={changeDocumentsHandler}
+                                onChange={changeAssessmentHandler}
                                 className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none"
                             />
                         </div>
@@ -157,7 +113,7 @@ function CourseCreate() {
                             type="submit"
                             className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors duration-200"
                         >
-                            Create Course
+                            Add video
                         </button>
                     </form>
                 </div>
@@ -166,4 +122,4 @@ function CourseCreate() {
     );
 }
 
-export default CourseCreate;
+export default AddVideo;
