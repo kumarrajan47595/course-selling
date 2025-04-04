@@ -3,6 +3,8 @@ import logo from "../../public/favicon.ico";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { BACKEND_URL } from "../utils/utils";
+
 function Signin() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -16,7 +18,7 @@ function Signin() {
 
         try {
             const response = await axios.post(
-                "http://localhost:400/api/v1/user/signin",
+                `${BACKEND_URL}/user/signin`,
                 {
                     email,
                     password,

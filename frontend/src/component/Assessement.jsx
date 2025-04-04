@@ -11,6 +11,7 @@ import { HiMenu, HiX } from "react-icons/hi"; // Import menu and close icons
 import logo from "../../public/favicon.ico";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "../utils/utils";
 
 function Assessement() {
     const [assessments, setAssessment] = useState([]);
@@ -33,7 +34,7 @@ function Assessement() {
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const response = await axios.get("http://localhost:400/api/v1/test/tests", {
+                const response = await axios.get(`${BACKEND_URL}/test/tests`, {
                     withCredentials: true,
                 });
                 console.log(response.data.test);
@@ -49,7 +50,7 @@ function Assessement() {
     // Logout
     const handleLogout = async () => {
         try {
-            const response = await axios.get("http://localhost:400/api/v1/user/signout", {
+            const response = await axios.get(`${BACKEND_URL}/user/signout`, {
                 withCredentials: true,
             });
             toast.success(response.data.message);

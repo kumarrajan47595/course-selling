@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { BACKEND_URL } from "../utils/utils";
 
 const Certificate = ({ userName, courseName }) => {
     const [loading, setLoading] = useState(false);
@@ -14,7 +15,7 @@ const Certificate = ({ userName, courseName }) => {
                 toast.error("Sign in to change Password")
                 navigate("/signin");
             }
-            const response = await axios.post("http://localhost:400/api/v1/user/download-certificate", {
+            const response = await axios.post(`${BACKEND_URL}/user/download-certificate`, {
                 userName,
                 courseName
             }, { responseType: "blob",

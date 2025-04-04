@@ -3,6 +3,7 @@ import logo from "../../public/favicon.ico";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { BACKEND_URL } from "../utils/utils";
 
 function Signup() {
     const [firstName, setFirstName] = useState("");
@@ -19,7 +20,7 @@ function Signup() {
 
         try {
             const response = await axios.post(
-                "http://localhost:400/api/v1/user/signup",
+                `${BACKEND_URL}/user/signup`,
                 {
                     firstName,
                     lastName,

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { BACKEND_URL } from "../utils/utils";
 
 function Video() {
     const { courseId } = useParams();
@@ -11,7 +12,7 @@ function Video() {
     useEffect(() => {
         const fetchDetails = async () => {
             try {
-                const response = await axios.get(`http://localhost:400/api/v1/course/${courseId}`);
+                const response = await axios.get(`${BACKEND_URL}/course/${courseId}`);
                 setVideo(response.data.course.video);
                 setDocument(response.data.course);
             } catch (error) {

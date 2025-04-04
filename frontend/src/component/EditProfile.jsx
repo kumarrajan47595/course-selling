@@ -3,6 +3,8 @@ import logo from "../../public/favicon.ico";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { BACKEND_URL } from "../utils/utils";
+
 function EditProfile() {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -24,7 +26,7 @@ function EditProfile() {
                 navigate("/signin");
             }
             const response = await axios.post(
-                "http://localhost:400/api/v1/user/profileupdate",
+                `${BACKEND_URL}/user/profileupdate`,
                 {
                     firstName,
                     lastName,

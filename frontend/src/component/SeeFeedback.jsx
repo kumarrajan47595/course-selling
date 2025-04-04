@@ -1,13 +1,14 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import { BACKEND_URL } from "../utils/utils";
 
 function SeeFeedback() {
     const { courseId } = useParams();
     const [feedback, setFeedback] = useState([]);
     useEffect(() => {
         const fetchFeedback = async () => {
-            const response = await axios.get(`http://localhost:400/api/v1/feedback/${courseId}`)
+            const response = await axios.get(`${BACKEND_URL}/feedback/${courseId}`)
             console.log(response);
             setFeedback(response.data);
         };

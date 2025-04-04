@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "../utils/utils";
 
 function ProfileUser() {
     const [users, setUsers] = useState([]);
@@ -18,7 +19,7 @@ function ProfileUser() {
     }
     useEffect(() => {
         const user = async () => {
-            const users = await axios.post("http://localhost:400/api/v1/user/profile", {}, {
+            const users = await axios.post(`${BACKEND_URL}/user/profile`, {}, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { BACKEND_URL } from "../utils/utils";
 
 const AddFeedback = () => {
     const [rating, setRating] = useState("");
@@ -22,7 +23,7 @@ const AddFeedback = () => {
         };
 
         try {
-            const response = await axios.post("http://localhost:400/api/v1/feedback/create", feedbackData);
+            const response = await axios.post(`${BACKEND_URL}/feedback/create`, feedbackData);
             setMessage("Feedback submitted successfully!");
             setRating("");
             setComment("");
